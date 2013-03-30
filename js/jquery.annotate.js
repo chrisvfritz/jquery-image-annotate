@@ -57,11 +57,15 @@
 
         // Add the "Add a note" button
         if (this.editable) {
-            this.button = $('<a class="image-annotate-add" id="image-annotate-add" href="#">Add Note</a>');
-            this.button.click(function() {
-                $.fn.annotateImage.add(image);
+            // this.button = $('<a class="image-annotate-add" id="image-annotate-add" href="#">Add Note</a>');
+            // this.button.click(function() {
+            //     $.fn.annotateImage.add(image);
+            // });
+            // this.canvas.after(this.button);
+
+            this.canvas.on('click', function(e){
+                $.fn.annotateImage.add(image, e);
             });
-            this.canvas.after(this.button);
         }
 
         // Hide the original
@@ -122,15 +126,15 @@
         return now.getTime();
     };
 
-    $.fn.annotateImage.add = function(image) {
-        ///	<summary>
-        ///		Adds a note to the image.
-        ///	</summary>        
+    $.fn.annotateImage.add = function(image, event) {
+        /// <summary>
+        ///     Adds a note to the image.
+        /// </summary>        
         if (image.mode == 'view') {
             image.mode = 'edit';
 
             // Create/prepare the editable note elements
-            var editable = new $.fn.annotateEdit(image);
+            var editable = new $.fn.annotateEdit(image, null, event);
 
             $.fn.annotateImage.createSaveButton(editable, image);
             $.fn.annotateImage.createCancelButton(editable, image);
@@ -208,19 +212,29 @@
         return '&lt;input type="hidden" name="' + name + '" value="' + value + '" /&gt;<br />';
     };
 
-    $.fn.annotateEdit = function(image, note) {
-        ///	<summary>
-        ///		Defines an editable annotation area.
-        ///	</summary>
+    $.fn.annotateEdit = function(image, note, event) {
+        /// <summary>
+        ///     Defines an editable annotation area.
+        /// </summary>
         this.image = image;
+        var notePosition = Object();
+
+        if (event) {
+            var canvasOffset = image.canvas.offset();
+            notePosition.top = event.pageY - canvasOffset.top;
+            notePosition.left = event.pageX - canvasOffset.left;
+        } else {
+            notePosition.top = 30;
+            notePosition.left = 30;
+        };
 
         if (note) {
             this.note = note;
         } else {
             var newNote = new Object();
             newNote.id = "new";
-            newNote.top = 30;
-            newNote.left = 30;
+            newNote.top = notePosition.top;
+            newNote.left = notePosition.left;
             newNote.width = 30;
             newNote.height = 30;
             newNote.text = "";
