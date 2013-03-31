@@ -324,10 +324,30 @@
 
         // Add the behavior: hide/display the note when hovering the area
         var annotation = this;
+        var noteHover = false;
+        var areaHover = false;
         this.area.hover(function() {
+            areaHover = true;
             annotation.show();
         }, function() {
-            annotation.hide();
+            areaHover = false;
+            setTimeout(function(){
+                if (areaHover == false && noteHover == false) {
+                    annotation.hide();
+                };
+            }, 300);
+        });
+
+        this.form.hover(function() {
+            noteHover = true;
+            annotation.show();
+        }, function() {
+            noteHover = false;
+            setTimeout(function(){
+                if (areaHover == false && noteHover == false) {
+                    annotation.hide();
+                };
+            }, 300);
         });
 
         // Edit a note feature
