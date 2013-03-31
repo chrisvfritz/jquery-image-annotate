@@ -381,6 +381,10 @@
         } else {
             this.area.addClass('image-annotate-area-editable-hover');
         }
+
+        $(".image-annotate-canvas a").on('click', function (e) {
+            e.stopPropagation();
+        });
     };
 
     $.fn.annotateView.prototype.hide = function() {
