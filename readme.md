@@ -6,6 +6,12 @@ This plugin works with jQuery 1.7.1.
 
 Extract [this zip file] [7] into a directory on your web server and navigate to `demo-static.html` or view a [live preview][1].
 
+###My fork's features
+
+1. Click and add note onto an image
+2. Image still show when hover on annotation note (for clicking the link)
+3. Stop add note if link is clicked
+
 ###Usage:
 
 To use the plugin you first need to reference the jQuery and jQuery UI libraries in your page. Add 
