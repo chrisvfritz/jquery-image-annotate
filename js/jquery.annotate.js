@@ -16,6 +16,7 @@
         this.getUrl = opts.getUrl;
         this.saveUrl = opts.saveUrl;
         this.deleteUrl = opts.deleteUrl;
+        this.getChosenUrl = opts.getChosenUrl;
         this.editable = opts.editable;
         this.useAjax = opts.useAjax;
         this.notes = opts.notes;
@@ -261,6 +262,34 @@
         this.form.css('left', this.area.offset().left + 'px');
         this.form.css('top', (parseInt(this.area.offset().top) + parseInt(this.area.height()) + 7) + 'px');
 
+
+        var variant_id = this.note.variant_id;
+        // ssa-chosen callback to select product
+        $.getJSON(this.image.getChosenUrl, function(data) {
+            var items = ['<option></option>'];
+            var selected = "";
+            console.log(variant_id);
+            $.each(data, function(index, data) {
+                if (variant_id == data["id"]) {
+                    selected = "selected";
+                };
+
+                items.push('<option value="' + data["url"] + '"' + selected + '>' + data["name"] + '</li>');
+            });
+            $('<select/>', {
+                'id': 'ssa-chosen',
+                html: items.join('')
+            }).appendTo('#image-annotate-edit-form form');
+
+            $('#ssa-chosen').on('change', function() {
+                var link = $('<a/>', {
+                    href: $(this).children(':selected').val(),
+                    html: $(this).children(':selected').html()
+                });
+                $('#image-annotate-text').val(link.prop('outerHTML'));
+            });
+        });
+
         // Set the area as a draggable/resizable element contained in the image canvas.
         // Would be better to use the containment option for resizable but buggy
         area.resizable({
@@ -450,7 +479,8 @@
                            '<input type="hidden" value="' + editable.area.width() + '" name="width"/>' +
                            '<input type="hidden" value="' + editable.area.position().top + '" name="top"/>' +
                            '<input type="hidden" value="' + editable.area.position().left + '" name="left"/>' +
-                           '<input type="hidden" value="' + editable.note.id + '" name="id"/>');
+                           '<input type="hidden" value="' + editable.note.id + '" name="id"/>' +
+                           '<input type="hidden" value="' + editable.note.variant_id + '" name="variant_id"/>');
         form.append(areaFields);
     }
 

@@ -10,8 +10,9 @@
 			$(window).load(function() {
 				$("#toAnnotate").annotateImage({
 					getUrl: "get.html",
-					saveUrl: "save.html",
+					saveUrl: "/tags/save.html",
 					deleteUrl: "delete.html",
+					getChosenUrl: 'chosen.json',
 					editable: true
 				});
 			});
